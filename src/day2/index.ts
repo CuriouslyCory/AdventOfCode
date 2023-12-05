@@ -34,6 +34,7 @@ const parseGameInput = async () => {
   return games;
 };
 
+// what is the sum of all game ids that are possible
 const part1 = async () => {
   const constraints = { red: 12, green: 13, blue: 14 } as const;
   const games = await parseGameInput();
@@ -50,15 +51,40 @@ const part1 = async () => {
       })
     ) {
       impossibleGames.push(game.gameId);
-      console.log("impossible", game);
     } else {
       possibleGames.push(game.gameId);
-      console.log("possible", game);
     }
   }
   return possibleGames.reduce((acc, curr) => acc + curr, 0);
 };
 
-const part2 = async () => {};
+// what is the fewest number of cubes of each color that could have been in the bag to make the game possible?
+const part2 = async () => {
+  //const constraints = { red: 12, green: 13, blue: 14 } as const;
+  const games = await parseGameInput();
+
+  const gameMinCubes = games.map((game) => {
+    console.log("game", game);
+    const { minRed, minGreen, minBlue } = game.drawData.reduce(
+      (acc, curr) => {
+        return {
+          minRed: Math.max(acc.minRed, curr.red ?? 0),
+          minGreen: Math.max(acc.minGreen, curr.green ?? 0),
+          minBlue: Math.max(acc.minBlue, curr.blue ?? 0),
+        };
+      },
+      { minRed: 0, minGreen: 0, minBlue: 0 }
+    );
+    return { gameId: game.gameId, minRed, minGreen, minBlue };
+  });
+
+  // The power of a set of cubes is equal to the numbers of red, green, and blue cubes multiplied together.
+  const powers = gameMinCubes.map((game) => {
+    return game.minRed * game.minGreen * game.minBlue;
+  });
+
+  // Adding up these powers gives us the answer.
+  return powers.reduce((acc, curr) => acc + curr, 0);
+};
 
 export { part1, part2 };
