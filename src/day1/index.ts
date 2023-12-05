@@ -1,3 +1,7 @@
-const part1 = () => {};
+export const part1 = () => {
+  console.log("Hello, World! Part1");
+};
 
-const part2 = () => {};
+export const part2 = () => {
+  console.log("Hello, World! Part2");
+};
