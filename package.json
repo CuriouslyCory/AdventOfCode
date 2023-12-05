@@ -3,12 +3,24 @@
   "version": "1.0.0",
   "description": "Framework for solving advent of code using typescript.",
   "scripts": {
+    "lint": "npx eslint .",
+    "day": "ts-node src/index.ts day",
+    "init-day": "ts-node src/index.ts init-day",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^20.10.3",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "eslint": "^8.55.0",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.6.2",
     "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "commander": "^11.1.0"
   }
 }
