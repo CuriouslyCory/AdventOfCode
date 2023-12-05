@@ -6,6 +6,7 @@
     "lint": "npx eslint .",
     "day": "ts-node src/index.ts day",
     "init-day": "ts-node src/index.ts init-day",
+    "clear": "rm -Rf src/day*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

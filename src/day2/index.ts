@@ -10,8 +10,6 @@ const part1 = async () => {
   const input = await getInput();
 };
 
-const part2 = async () => {
-  const input = await getInput();
-};
+const part2 = async () => {};
 
 export { part1, part2 };
