@@ -22,7 +22,8 @@ program
 program
   .command("day")
   .argument("<day>", "Day to run")
-  .action(async (day) => {
+  .option("-p, --part <part>", "Part to run")
+  .action(async (day, options) => {
     console.log(`Running day ${day}`);
 
     // Construct the path to the module based on the day
@@ -31,16 +32,42 @@ program
     try {
       // Dynamically import the module
       const dayModule = await import(modulePath);
-
-      // Check if the module has the required functions
-      if (dayModule.part1 && dayModule.part2) {
-        console.log(`Results for Day ${day}:`);
-        console.log(`Part 1:`, await dayModule.part1());
-        console.log(`Part 2:`, await dayModule.part2());
+      if (options.part) {
+        switch (options.part) {
+          case "1":
+            if (dayModule.part1) {
+              console.log(`Results for Day ${day}:`);
+              console.log(`Part 1:`, await dayModule.part1());
+            } else {
+              console.error(
+                `The module for Day ${day} does not export part1 function.`
+              );
+            }
+            break;
+          case "2":
+            if (dayModule.part2) {
+              console.log(`Results for Day ${day}:`);
+              console.log(`Part 2:`, await dayModule.part2());
+            } else {
+              console.error(
+                `The module for Day ${day} does not export part2 function.`
+              );
+            }
+            break;
+          default:
+            console.error(`Invalid part: ${options.part}`);
+        }
       } else {
-        console.error(
-          `The module for Day ${day} does not export part1 and part2 functions.`
-        );
+        // Check if the module has the required functions
+        if (dayModule.part1 && dayModule.part2) {
+          console.log(`Results for Day ${day}:`);
+          console.log(`Part 1:`, await dayModule.part1());
+          console.log(`Part 2:`, await dayModule.part2());
+        } else {
+          console.error(
+            `The module for Day ${day} does not export part1 and part2 functions.`
+          );
+        }
       }
     } catch (error) {
       console.error(`Error loading module for Day ${day}:`, error);
