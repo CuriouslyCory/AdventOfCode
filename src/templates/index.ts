@@ -1,3 +1,15 @@
-const part1 = () => {};
+import path from "path";
+import { readFileContent } from "../utils/fs-helper";
 
-const part2 = () => {};
+const inputFilePath = path.join(__dirname, `./input.txt`);
+const getInput = async () => {
+  return await readFileContent(inputFilePath);
+};
+
+const part1 = async () => {
+  const input = await getInput();
+};
+
+const part2 = async () => {};
+
+export { part1, part2 };

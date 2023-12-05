@@ -7,7 +7,7 @@ import path from "path";
  * @param sourceDir - The path of the source directory.
  * @param destinationDir - The path of the destination directory.
  */
-export const copyFiles = async (sourceDir: string, destinationDir: string) => {
+export async function copyFiles(sourceDir: string, destinationDir: string) {
   try {
     const files = await fs.readdir(sourceDir);
     for (const file of files) {
@@ -19,4 +19,21 @@ export const copyFiles = async (sourceDir: string, destinationDir: string) => {
   } catch (error) {
     console.error("Error occurred:", error);
   }
-};
+}
+
+/**
+ * Reads the content of a file.
+ *
+ * @param filePath - The path of the file to read.
+ * @returns A promise that resolves to the content of the file as a string.
+ * @throws If there is an error reading the file.
+ */
+export async function readFileContent(filePath: string): Promise<string> {
+  try {
+    const content = await fs.readFile(filePath, { encoding: "utf-8" });
+    return content;
+  } catch (error) {
+    console.error(`Error reading file at ${filePath}:`, error);
+    throw error; // or return an empty string or a default value
+  }
+}
