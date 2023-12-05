@@ -64,7 +64,6 @@ const part2 = async () => {
   const games = await parseGameInput();
 
   const gameMinCubes = games.map((game) => {
-    console.log("game", game);
     const { minRed, minGreen, minBlue } = game.drawData.reduce(
       (acc, curr) => {
         return {
