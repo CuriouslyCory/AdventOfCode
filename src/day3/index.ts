@@ -1,7 +1,7 @@
 import path from "path";
 import { readFileContent } from "../utils/fs-helper";
-//import { z } from "zod";
 
+// boostrap get input
 const inputFilePath = path.join(__dirname, `./input.txt`);
 const getInput = async () => {
   return (await readFileContent(inputFilePath))
@@ -74,8 +74,8 @@ const part1 = async () => {
   return partSum;
 };
 
+// regex patter to match groups of digits
 const numberRegex = /\d+/g;
-//const numSchema = z.number();
 
 // 0 - 3 is row -1 '... '
 // 4 - 7 is row +0 '*** '
