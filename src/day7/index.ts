@@ -36,6 +36,8 @@ const cardsAry: Array<Card> = [
 type Hand = {
   cards: Array<Card>;
   bid: number;
+  rank: number;
+  type?: number;
 };
 
 // load and format the input
@@ -46,6 +48,7 @@ const getInput = async (): Promise<Array<Hand>> => {
     return {
       cards: hand.split("") as Array<Card>,
       bid: parseInt(bid),
+      rank: 0,
     };
   });
 };
@@ -94,19 +97,18 @@ function handStrength(cards: Array<Card>) {
 }
 
 // sort hands according to strength, then by high card
-function handStrengthSort(a: Array<Card>, b: Array<Card>) {
+function handStrengthSort(a: Hand, b: Hand) {
   // Compare hand strengths first
-  const strengthA = handStrength(a);
-  const strengthB = handStrength(b);
-
-  if (strengthB !== strengthA) {
-    return strengthB - strengthA;
+  if (!a.type) a.type = handStrength(a.cards);
+  if (!b.type) b.type = handStrength(b.cards);
+  if (b.type !== a.type) {
+    return b.type - a.type;
   }
 
   // If hand strengths are the same, compare individual card strengths
-  for (let i = 0; i < a.length; i++) {
-    const cardAStrength = cardsAry.indexOf(a[i]);
-    const cardBStrength = cardsAry.indexOf(b[i]);
+  for (let i = 0; i < a.cards.length; i++) {
+    const cardAStrength = cardsAry.indexOf(a.cards[i]);
+    const cardBStrength = cardsAry.indexOf(b.cards[i]);
 
     if (cardAStrength !== cardBStrength) {
       return cardAStrength - cardBStrength;
@@ -119,12 +121,19 @@ function handStrengthSort(a: Array<Card>, b: Array<Card>) {
 
 async function part1() {
   const input = await getInput();
-  input.sort((a, b) => handStrengthSort(a.cards, b.cards)).reverse();
-  return input.reduce((acc, hand, currentIndex) => {
-    const rank = currentIndex + 1;
-    console.log(acc, hand, rank, hand.bid * rank);
-    return acc + hand.bid * rank;
+  input.sort((a, b) => handStrengthSort(a, b)).reverse();
+  const rankedInput = input.map((hand, index) => {
+    return {
+      ...hand,
+      rank: index + 1,
+    };
+  });
+  console.log(rankedInput);
+  return rankedInput.reduce((acc, hand) => {
+    console.log(hand, hand.bid * hand.rank);
+    return acc + hand.bid * hand.rank;
   }, 0);
+  //252409769
 }
 
 async function part2() {
