@@ -38,6 +38,7 @@ type Hand = {
   bid: number;
 };
 
+// load and format the input
 const inputFilePath = path.join(__dirname, `./input.txt`);
 const getInput = async (): Promise<Array<Hand>> => {
   return (await readFileContent(inputFilePath)).split("\n").map((line) => {
@@ -49,7 +50,7 @@ const getInput = async (): Promise<Array<Hand>> => {
   });
 };
 
-// patterns
+// Hand strength patterns
 // Five of a kind, where all five cards have the same label: AAAAA
 // Four of a kind, where four cards have the same label and one card has a different label: AA8AA
 // Full house, where three cards have the same label, and the remaining two cards share a different label: 23332
@@ -57,35 +58,42 @@ const getInput = async (): Promise<Array<Hand>> => {
 // Two pair, where two cards share one label, two other cards share a second label, and the remaining card has a third label: 23432
 // One pair, where two cards share one label, and the other three cards have a different label from the pair and each other: A23A4
 // High card, where all cards' labels are distinct: 23456
-
 function handStrength(cards: Array<Card>) {
+  // put matching cards next to each other
   const ordered = [...cards].sort(
     (a, b) => cardsAry.indexOf(b) - cardsAry.indexOf(a)
   );
   switch (true) {
-    case ordered[0] === ordered[4]: // five of a kind
+    // five of a kind
+    case ordered[0] === ordered[4]:
+      return 7;
+    // four of a kind
+    case ordered[0] === ordered[3] || ordered[1] === ordered[4]:
       return 6;
-    case ordered[0] === ordered[3] || ordered[1] === ordered[4]: // four of a kind
+    // full house
+    case ordered[0] === ordered[2] && ordered[3] === ordered[4]:
       return 5;
-    case ordered[0] === ordered[2] && ordered[3] === ordered[4]: // full house
-      return 4;
-    case ordered[0] === ordered[2] || // three of a kind
+    // three of a kind
+    case ordered[0] === ordered[2] ||
       ordered[1] === ordered[3] ||
       ordered[2] === ordered[4]:
+      return 4;
+    // two pair
+    case ordered[0] === ordered[1] && ordered[2] === ordered[3]:
       return 3;
-    case ordered[0] === ordered[1] && ordered[2] === ordered[3]: // two pair
-      return 2;
-    case ordered[0] === ordered[1] || // one pair
+    // one pair
+    case ordered[0] === ordered[1] ||
       ordered[1] === ordered[2] ||
       ordered[2] === ordered[3] ||
       ordered[3] === ordered[4]:
+      return 2;
+    // high card
+    default:
       return 1;
-    default: // high card
-      return 0;
   }
 }
 
-// sort hands according to strength
+// sort hands according to strength, then by high card
 function handStrengthSort(a: Array<Card>, b: Array<Card>) {
   // Compare hand strengths first
   const strengthA = handStrength(a);
