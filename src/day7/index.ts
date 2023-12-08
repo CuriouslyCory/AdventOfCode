@@ -150,16 +150,61 @@ async function part1() {
       rank: index + 1,
     };
   });
-  console.log(rankedInput);
   return rankedInput.reduce((acc, hand) => {
-    console.log(hand, hand.bid * hand.rank);
     return acc + hand.bid * hand.rank;
   }, 0);
-  //252409769
-  //252196161
-  //252262121
   //252118040
   //252052080
+}
+
+// Card strength mapping
+const cardStrength: { [key in Card]: number } = {
+  A: 14,
+  K: 13,
+  Q: 12,
+  T: 10,
+  "9": 9,
+  "8": 8,
+  "7": 7,
+  "6": 6,
+  "5": 5,
+  "4": 4,
+  "3": 3,
+  "2": 2,
+  J: 1,
+};
+
+function wildHandStrength(cards: Array<Card>) {
+  // put matching cards next to each other
+  const ordered = [...cards].sort(
+    (a, b) => cardsAry.indexOf(b) - cardsAry.indexOf(a)
+  );
+  switch (true) {
+    // five of a kind
+    case ordered[0] === ordered[4]:
+      return 7;
+    // four of a kind
+    case ordered[0] === ordered[3] || ordered[1] === ordered[4]:
+      return 6;
+    // full house
+    case (ordered[0] === ordered[2] && ordered[3] === ordered[4]) ||
+      (ordered[0] === ordered[1] && ordered[2] === ordered[4]):
+      return 5;
+    // three of a kind
+    case ordered[0] === ordered[2] ||
+      ordered[1] === ordered[3] ||
+      ordered[2] === ordered[4]:
+      return 4;
+    // two pair
+    case hasTwoPair([...ordered]):
+      return 3;
+    // one pair
+    case hasPair([...ordered]):
+      return 2;
+    // high card
+    default:
+      return 1;
+  }
 }
 
 async function part2() {
