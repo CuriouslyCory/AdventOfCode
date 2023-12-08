@@ -53,6 +53,30 @@ const getInput = async (): Promise<Array<Hand>> => {
   });
 };
 
+// assumes cards are sorted
+function hasPair(cards: Array<Card>): boolean {
+  while (cards.length > 1) {
+    if (cards[0] === cards[1]) {
+      return true;
+    }
+    cards.shift();
+  }
+  return false;
+}
+
+// assumes cards are sorted
+function hasTwoPair(cards: Array<Card>): boolean {
+  let pairCount = 0;
+  while (cards.length > 1) {
+    if (cards[0] === cards[1]) {
+      pairCount++;
+      if (pairCount === 2) return true;
+    }
+    cards.shift();
+  }
+  return false;
+}
+
 // Hand strength patterns
 // Five of a kind, where all five cards have the same label: AAAAA
 // Four of a kind, where four cards have the same label and one card has a different label: AA8AA
@@ -74,7 +98,8 @@ function handStrength(cards: Array<Card>) {
     case ordered[0] === ordered[3] || ordered[1] === ordered[4]:
       return 6;
     // full house
-    case ordered[0] === ordered[2] && ordered[3] === ordered[4]:
+    case (ordered[0] === ordered[2] && ordered[3] === ordered[4]) ||
+      (ordered[0] === ordered[1] && ordered[2] === ordered[4]):
       return 5;
     // three of a kind
     case ordered[0] === ordered[2] ||
@@ -82,13 +107,10 @@ function handStrength(cards: Array<Card>) {
       ordered[2] === ordered[4]:
       return 4;
     // two pair
-    case ordered[0] === ordered[1] && ordered[2] === ordered[3]:
+    case hasTwoPair([...ordered]):
       return 3;
     // one pair
-    case ordered[0] === ordered[1] ||
-      ordered[1] === ordered[2] ||
-      ordered[2] === ordered[3] ||
-      ordered[3] === ordered[4]:
+    case hasPair([...ordered]):
       return 2;
     // high card
     default:
@@ -134,6 +156,10 @@ async function part1() {
     return acc + hand.bid * hand.rank;
   }, 0);
   //252409769
+  //252196161
+  //252262121
+  //252118040
+  //252052080
 }
 
 async function part2() {
